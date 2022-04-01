@@ -12,10 +12,10 @@ if(isset($_SESSION['user_id'])) {
     $userLevel = $_SESSION['user_level'];
 }
 
-if($user->checkLogin($userId)) {
-    $userArray = array();
-    $errorsArray = array();
-}
+// if($user->checkLogin($userId)) {
+//     $userArray = array();
+//     $errorsArray = array();
+// }
 if($user->isAdminLevel($userLevel)){
     $userList = array();
 
@@ -59,5 +59,9 @@ if($user->isAdminLevel($userLevel)){
     $nextPageLink = http_build_query($_GET);
 
     include('../tpl/user-report.tpl.php');
+}else{
+    $user->errors = "Invalid User";
+    header('location: index.php');
+    exit;
 }
 ?>

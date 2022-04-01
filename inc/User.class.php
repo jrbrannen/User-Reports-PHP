@@ -58,7 +58,7 @@ class User {
 		$sortColumn = null, 
 		$sortDirection = null,
 		$page = null
-	) {
+	    ) {
 		
 		$dataList = array();
 		$searchColumn = filter_var($searchColumn, FILTER_SANITIZE_STRING);
@@ -69,7 +69,7 @@ class User {
 		$sql = "SELECT * FROM users";
 		// check we received search parameters
 		if (!is_null($searchColumn) && !empty($searchColumn) && !is_null($searchFor) && !empty($searchFor)) {
-			$sql .= "WHERE " . $searchColumn . " LIKE ? ";
+			$sql .= " WHERE " . $searchColumn . " LIKE ? ";
 		}
 
 		if (!is_null($sortColumn) && !empty($sortColumn) && !is_null($sortDirection) && !empty($sortDirection)) {
@@ -77,19 +77,18 @@ class User {
 		}
 		
 		// setup paging if passed
-		
 		$how_many_on_page = 2;
 		
 		if (!is_null($page) && is_numeric($page)) {
 			$sql .= " LIMIT " . (($how_many_on_page * $page - 1) - 1) . ", " . $how_many_on_page;
 		}
-
+// var_dump($sql); die;
 		$stmt = $this->db->prepare($sql);
-        
-		$stmt->execute(array(
+        // $stmt->execute();
+        // var_dump($searchFor); die;
+		$stmt->execute((is_null($searchFor) || empty($searchFor) ? null : array(
 			'%' . $searchFor . '%'
-		));
-        
+		)));
 		
         if ($stmt->rowCount() > 0) {
             $dataList = $stmt->fetchAll(PDO::FETCH_ASSOC);
